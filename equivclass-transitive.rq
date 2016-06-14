@@ -1,0 +1,13 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+INSERT {  
+?s owl:equivalentClass ?o2 .
+} 
+WHERE { 
+?s owl:equivalentClass ?o .
+?o owl:equivalentClass ?o2 .
+FILTER(?s != ?o2)
+FILTER(isIRI(?s))
+FILTER(isIRI(?o))
+FILTER(isIRI(?o2))
+}

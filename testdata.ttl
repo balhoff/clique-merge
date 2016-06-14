@@ -1,0 +1,23 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX leader: <http://www.monarchinitiative.org/MONARCH_cliqueLeader>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex: <http://example.org/>
+
+ex:a1 owl:sameAs ex:a2 .
+ex:a1 leader: "true"^^xsd: .
+ex:a2 owl:sameAs ex:a3 .
+ex:a2 leader: "true"^^xsd: .
+ex:a3 rdfs:label "exA2" .
+
+ex:b1 owl:sameAs <http://www.ncbi.nlm.nih.gov/gene/b2> .
+ex:a1 leader: "true"^^xsd: .
+<http://www.ncbi.nlm.nih.gov/gene/b2> owl:sameAs ex:b3 .
+<http://www.ncbi.nlm.nih.gov/gene/b2> leader: "true"^^xsd: .
+ex:b3 owl:sameAs ex:b4 .
+
+ex:c1 owl:sameAs ex:c2 .
+ex:c2 owl:sameAs ex:c3 .
+ex:c4 owl:sameAs ex:c1 .
+ex:c5 owl:sameAs ex:c2 .
+[] owl:sameAs ex:c2 .
