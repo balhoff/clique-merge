@@ -21,3 +21,5 @@ ex:c2 owl:sameAs ex:c3 .
 ex:c4 owl:sameAs ex:c1 .
 ex:c5 owl:sameAs ex:c2 .
 [] owl:sameAs ex:c2 .
+
+ex:d1 ex:part_of ex:c3 .

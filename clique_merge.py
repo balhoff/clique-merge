@@ -39,10 +39,14 @@ def electLeaders():
     print("Removed equivalentClass links: %d" % equivClassChanges)
     
 def moveRelationships():
-    sameAsChanges = submitUpdate("move-relationships-sameas.rq")
-    print("sameAs changes: %d" % sameAsChanges)
-    equivClassChanges = submitUpdate("move-relationships-equiv.rq")
-    print("equivalentClass changes: %d" % equivClassChanges)
+    sameAsChangesOutgoing = submitUpdate("move-outgoing-relationships-sameas.rq")
+    print("sameAs changes outgoing: %d" % sameAsChangesOutgoing)
+    sameAsChangesIncoming = submitUpdate("move-incoming-relationships-sameas.rq")
+    print("sameAs changes incoming: %d" % sameAsChangesIncoming)
+    equivClassChangesOutgoing = submitUpdate("move-outgoing-relationships-equiv.rq")
+    print("equivalentClass changes outgoing: %d" % equivClassChangesOutgoing)
+    equivClassChangesIncoming = submitUpdate("move-incoming-relationships-equiv.rq")
+    print("equivalentClass changes incoming: %d" % equivClassChangesIncoming)
     
 def main():
     print("Computing sameAs")
@@ -51,6 +55,7 @@ def main():
     computeEquivalentClass()
     print("Electing leaders")
     electLeaders()
+    print("Moving relationships")
     moveRelationships()
     
 if __name__ == "__main__":
