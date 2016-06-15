@@ -37,7 +37,7 @@ def submitUpdate(filename):
     return mutationCount(result)
     
 def electLeaders():
-    sameAsChanges = submitUpdate("remove_extra_sameas_leaders.rq")
+    sameAsChanges = submitUpdate("elect_leaders.rq")
     print("Removed sameAs links: %d" % sameAsChanges)
     
 def moveRelationships():
