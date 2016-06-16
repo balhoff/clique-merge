@@ -5,9 +5,9 @@
 
 set -e
 
-mkdir data
+mkdir -p data
 cd data
-mkdir ontologies
+mkdir -p ontologies
 
 curl -L -O http://data.monarchinitiative.org/owl/monarch-merged.owl
 owltools http://biohackathon.org/resource/faldo.ttl --slurp-import-closure -d ontologies -c catalog-v001.xml
@@ -17,6 +17,8 @@ owltools https://raw.githubusercontent.com/monarch-initiative/GENO-ontology/deve
 owltools http://data.monarchinitiative.org/owl/ero.owl --slurp-import-closure -d ontologies -c catalog-v001.xml
 owltools http://purl.obolibrary.org/obo/pw.owl --slurp-import-closure -d ontologies -c catalog-v001.xml
 owltools https://raw.githubusercontent.com/jamesmalone/OBAN/master/ontology/oban_core.ttl --slurp-import-closure -d ontologies -c catalog-v001.xml
+# Blazegraph will try to load .owl as RDF/XML
+mv ontologies/purl.org/oban/oban_core.owl ontologies/purl.org/oban/oban_core.ttl
 ## change to RDF/XML?
   # clo.owl is missing and import
   #- url: http://purl.obolibrary.org/obo/clo.owl
