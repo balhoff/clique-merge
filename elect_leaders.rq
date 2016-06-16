@@ -15,8 +15,11 @@ OPTIONAL {
 OPTIONAL {
     ?o leader: ?oleader .
 }
+# More than one term in a clique can have a leader annotation. Obtain a 
+# true or false value for both being compared.
 BIND(COALESCE(SAMETERM(?sleader, "true"^^xsd:), false) AS ?sleaderbool)
 BIND(COALESCE(SAMETERM(?oleader, "true"^^xsd:), false) AS ?oleaderbool)
+# Determine whether the terms being compared have a priority IRI namespace
 BIND(COALESCE((
     STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/gene/") ||
     STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/pubmed/") ||
@@ -41,17 +44,19 @@ BIND(COALESCE((
     STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/MP_") ||
     STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/ZP_")), false)
     AS ?opriorityprefix)
+# Allow this update only if ?s is a better leader than ?o
 FILTER(
+    # If ?s is leader and ?o is not, allow.
     (?sleaderbool && !?oleaderbool) || 
-    (
+    ( # Else if they have the same leader type, then...
         ((?sleaderbool && ?oleaderbool) || (!?sleaderbool && !?oleaderbool)) && 
-        (
+        ( # If ?s has priority namespace and ?o does not, allow.
             (?spriorityprefix && !?opriorityprefix) ||
-            (
+            ( # Else if they have the same namespace priority, then...
                 ((?spriorityprefix && ?opriorityprefix) || (!?spriorityprefix && !?opriorityprefix)) && 
-                (
+                ( # If ?s is an IRI and ?o is a blank node, allow.
                     (isIRI(?s) && isBlank(?o)) || 
-                    (
+                    ( # Else if both are IRIs or both are blank, then if ?s is alphabetically less than ?o, allow.
                         ((isIRI(?s) && isIRI(?o)) || (isBlank(?s) && isBlank(?o))) && (STR(?s) < STR(?o))
                     )
                 )
