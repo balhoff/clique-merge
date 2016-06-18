@@ -22,48 +22,28 @@ BIND(COALESCE(SAMETERM(?oleader, "true"^^xsd:), false) AS ?oleaderbool)
 # Determine whether the terms being compared have a priority IRI namespace
 BIND(COALESCE(
 IF (STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/gene/"), 0, 
-    IF (STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/pubmed/"), 1, 
-        IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/NCBITaxon_"), 2, 
-            IF (STRSTARTS(STR(?s), "http://identifiers.org/ensembl/"), 3, 
-                IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/OMIM_"), 4, 
-                    IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/DOID_"), 5, 
-                        IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/Orphanet_"), 6, 
-                            IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/HP_"), 7, 
-                                IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/MP_"), 8, 
-                                    IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/ZP_"), 9, 
-                                    10
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-), 10) AS ?spriorityprefix)
+IF (STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/pubmed/"), 1, 
+IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/NCBITaxon_"), 2, 
+IF (STRSTARTS(STR(?s), "http://identifiers.org/ensembl/"), 3, 
+IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/OMIM_"), 4, 
+IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/DOID_"), 5, 
+IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/Orphanet_"), 6, 
+IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/HP_"), 7, 
+IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/MP_"), 8, 
+IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/ZP_"), 9, 
+10)))))))))), 10) AS ?spriorityprefix)
 BIND(COALESCE(
 IF (STRSTARTS(STR(?o), "http://www.ncbi.nlm.nih.gov/gene/"), 0, 
-    IF (STRSTARTS(STR(?o), "http://www.ncbi.nlm.nih.gov/pubmed/"), 1, 
-        IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/NCBITaxon_"), 2, 
-            IF (STRSTARTS(STR(?o), "http://identifiers.org/ensembl/"), 3, 
-                IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/OMIM_"), 4, 
-                    IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/DOID_"), 5, 
-                        IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/Orphanet_"), 6, 
-                            IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/HP_"), 7, 
-                                IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/MP_"), 8, 
-                                    IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/ZP_"), 9, 
-                                    10
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-), 10) AS ?opriorityprefix)
+IF (STRSTARTS(STR(?o), "http://www.ncbi.nlm.nih.gov/pubmed/"), 1, 
+IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/NCBITaxon_"), 2, 
+IF (STRSTARTS(STR(?o), "http://identifiers.org/ensembl/"), 3, 
+IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/OMIM_"), 4, 
+IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/DOID_"), 5, 
+IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/Orphanet_"), 6, 
+IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/HP_"), 7, 
+IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/MP_"), 8, 
+IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/ZP_"), 9, 
+10)))))))))), 10) AS ?opriorityprefix)
 # Allow this update only if ?s is a better leader than ?o
 FILTER(
     # If ?s is leader and ?o is not, allow.

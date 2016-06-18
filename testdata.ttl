@@ -14,6 +14,8 @@ ex:b1 owl:sameAs <http://www.ncbi.nlm.nih.gov/gene/b2> .
 ex:a1 leader: "true"^^xsd: .
 <http://www.ncbi.nlm.nih.gov/gene/b2> owl:sameAs ex:b3 .
 <http://www.ncbi.nlm.nih.gov/gene/b2> leader: "true"^^xsd: .
+<http://identifiers.org/ensembl/b2> owl:sameAs ex:b3 .
+<http://identifiers.org/ensembl/b2> leader: "true"^^xsd: .
 ex:b3 owl:sameAs ex:b4 .
 
 ex:c1 owl:sameAs ex:c2 .
