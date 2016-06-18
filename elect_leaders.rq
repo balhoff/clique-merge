@@ -20,40 +20,60 @@ OPTIONAL {
 BIND(COALESCE(SAMETERM(?sleader, "true"^^xsd:), false) AS ?sleaderbool)
 BIND(COALESCE(SAMETERM(?oleader, "true"^^xsd:), false) AS ?oleaderbool)
 # Determine whether the terms being compared have a priority IRI namespace
-BIND(COALESCE((
-    STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/gene/") ||
-    STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/pubmed/") ||
-    STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/NCBITaxon_") ||
-    STRSTARTS(STR(?s), "http://identifiers.org/ensembl/") ||
-    STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/OMIM_") ||
-    STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/DOID_") ||
-    STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/Orphanet_") ||
-    STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/HP_") ||
-    STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/MP_") ||
-    STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/ZP_")), false)
-    AS ?spriorityprefix)
-BIND(COALESCE((
-    STRSTARTS(STR(?o), "http://www.ncbi.nlm.nih.gov/gene/") ||
-    STRSTARTS(STR(?o), "http://www.ncbi.nlm.nih.gov/pubmed/") ||
-    STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/NCBITaxon_") ||
-    STRSTARTS(STR(?o), "http://identifiers.org/ensembl/") ||
-    STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/OMIM_") ||
-    STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/DOID_") ||
-    STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/Orphanet_") ||
-    STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/HP_") ||
-    STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/MP_") ||
-    STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/ZP_")), false)
-    AS ?opriorityprefix)
+BIND(COALESCE(
+IF (STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/gene/"), 0, 
+    IF (STRSTARTS(STR(?s), "http://www.ncbi.nlm.nih.gov/pubmed/"), 1, 
+        IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/NCBITaxon_"), 2, 
+            IF (STRSTARTS(STR(?s), "http://identifiers.org/ensembl/"), 3, 
+                IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/OMIM_"), 4, 
+                    IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/DOID_"), 5, 
+                        IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/Orphanet_"), 6, 
+                            IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/HP_"), 7, 
+                                IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/MP_"), 8, 
+                                    IF (STRSTARTS(STR(?s), "http://purl.obolibrary.org/obo/ZP_"), 9, 
+                                    10
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+), 10) AS ?spriorityprefix)
+BIND(COALESCE(
+IF (STRSTARTS(STR(?o), "http://www.ncbi.nlm.nih.gov/gene/"), 0, 
+    IF (STRSTARTS(STR(?o), "http://www.ncbi.nlm.nih.gov/pubmed/"), 1, 
+        IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/NCBITaxon_"), 2, 
+            IF (STRSTARTS(STR(?o), "http://identifiers.org/ensembl/"), 3, 
+                IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/OMIM_"), 4, 
+                    IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/DOID_"), 5, 
+                        IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/Orphanet_"), 6, 
+                            IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/HP_"), 7, 
+                                IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/MP_"), 8, 
+                                    IF (STRSTARTS(STR(?o), "http://purl.obolibrary.org/obo/ZP_"), 9, 
+                                    10
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+), 10) AS ?opriorityprefix)
 # Allow this update only if ?s is a better leader than ?o
 FILTER(
     # If ?s is leader and ?o is not, allow.
     (?sleaderbool && !?oleaderbool) || 
     ( # Else if they have the same leader type, then...
         ((?sleaderbool && ?oleaderbool) || (!?sleaderbool && !?oleaderbool)) && 
-        ( # If ?s has priority namespace and ?o does not, allow.
-            (?spriorityprefix && !?opriorityprefix) ||
+        ( # If ?s has higher priority namespace, allow.
+            (?spriorityprefix < ?opriorityprefix) ||
             ( # Else if they have the same namespace priority, then...
-                ((?spriorityprefix && ?opriorityprefix) || (!?spriorityprefix && !?opriorityprefix)) && 
+                (?spriorityprefix = ?opriorityprefix) && 
                 ( # If ?s is an IRI and ?o is a blank node, allow.
                     (isIRI(?s) && isBlank(?o)) || 
                     ( # Else if both are IRIs or both are blank, then if ?s is alphabetically less than ?o, allow.
