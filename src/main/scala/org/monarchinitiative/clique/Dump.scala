@@ -23,10 +23,7 @@ object Dump extends Command(description = "Dump Blazegraph database to a Turtle 
     val repository = new BigdataSailRepository(sail)
     repository.initialize()
     val blazegraph = repository.getUnisolatedConnection
-    val triplesQuery = blazegraph.prepareGraphQuery(QueryLanguage.SPARQL, """
-    CONSTRUCT { ?s ?p ?o . }
-    WHERE { ?s ?p ?o . }
-    """)
+    val triplesQuery = blazegraph.prepareGraphQuery(QueryLanguage.SPARQL, "CONSTRUCT WHERE { ?s ?p ?o . }")
     val triplesOutput = new BufferedOutputStream(new FileOutputStream(file))
     triplesQuery.evaluate(new TurtleWriter(triplesOutput))
     triplesOutput.close()
