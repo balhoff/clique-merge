@@ -58,7 +58,7 @@ object Merge extends Command(description = "Perform clique merge on triples in B
 
   def moveRelationships(connection: BigdataSailRepositoryConnection): Unit = {
     val outgoingChanges = submitUpdate(getQuery("move-outgoing-relationships-sameas.rq"), connection)
-    println(s"sameAs changes outgoing: outgoingChanges")
+    println(s"sameAs changes outgoing: $outgoingChanges")
     val incomingChanges = submitUpdate(getQuery("move-incoming-relationships-sameas.rq"), connection)
     println(s"sameAs changes incoming: $incomingChanges")
   }
