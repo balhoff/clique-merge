@@ -18,8 +18,8 @@ javaOptions += "-Xmx12G"
 
 libraryDependencies ++= {
     Seq(
-      "com.blazegraph"      %  "bigdata-core" % "2.1.2",
-      "org.backuity.clist"  %% "clist-core"   % "2.0.2",
-      "org.backuity.clist"  %% "clist-macros" % "2.0.2" % "provided"
+      "com.blazegraph"     %  "bigdata-core" % "2.1.2",
+      "org.backuity.clist" %% "clist-core"   % "2.0.2",
+      "org.backuity.clist" %% "clist-macros" % "2.0.2" % "provided"
     )
 }

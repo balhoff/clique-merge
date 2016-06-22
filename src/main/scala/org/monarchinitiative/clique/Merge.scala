@@ -8,6 +8,7 @@ import java.util.stream.Collectors
 
 import org.backuity.clist._
 import org.openrdf.query.QueryLanguage
+import org.slf4j.LoggerFactory
 
 import com.bigdata.rdf.sail.BigdataSail
 import com.bigdata.rdf.sail.BigdataSailRepository
@@ -22,45 +23,45 @@ object Merge extends Command(description = "Perform clique merge on triples in B
     val repository = new BigdataSailRepository(sail)
     repository.initialize()
     val blazegraph = repository.getUnisolatedConnection
-    println("Converting equivalentClass to sameAs")
+    logger.info("Converting equivalentClass to sameAs")
     convertEquivToSameAs(blazegraph)
-    println("Computing sameAs")
+    logger.info("Computing sameAs")
     computeSameAs(blazegraph)
-    println("Electing leaders")
+    logger.info("Electing leaders")
     electLeaders(blazegraph)
-    println("Moving relationships")
+    logger.info("Moving relationships")
     moveRelationships(blazegraph)
     blazegraph.close()
   }
 
   def convertEquivToSameAs(connection: BigdataSailRepositoryConnection): Unit = {
     val changes = submitUpdate(getQuery("convert-equiv-to-sameas.rq"), connection)
-    println(s"Convert equiv to sameAs changes: $changes")
+    logger.info(s"Convert equiv to sameAs changes: $changes")
   }
 
   def computeSameAs(connection: BigdataSailRepositoryConnection): Unit = {
     transitive(getQuery("sameas-transitive.rq"), connection)
     val changes = submitUpdate(getQuery("sameas-symmetric.rq"), connection)
-    println(s"Symmetric changes: $changes")
+    logger.info(s"Symmetric changes: $changes")
     if (changes > 0) computeSameAs(connection)
   }
 
   def transitive(update: String, connection: BigdataSailRepositoryConnection): Unit = {
     val changes = submitUpdate(update, connection)
-    println(s"Transitive changes: $changes")
+    logger.info(s"Transitive changes: $changes")
     if (changes > 0) transitive(update, connection)
   }
 
   def electLeaders(connection: BigdataSailRepositoryConnection): Unit = {
     val changes = submitUpdate(getQuery("elect_leaders.rq"), connection)
-    println(s"Removed sameAs links: $changes")
+    logger.info(s"Removed sameAs links: $changes")
   }
 
   def moveRelationships(connection: BigdataSailRepositoryConnection): Unit = {
     val outgoingChanges = submitUpdate(getQuery("move-outgoing-relationships-sameas.rq"), connection)
-    println(s"sameAs changes outgoing: $outgoingChanges")
+    logger.info(s"sameAs changes outgoing: $outgoingChanges")
     val incomingChanges = submitUpdate(getQuery("move-incoming-relationships-sameas.rq"), connection)
-    println(s"sameAs changes incoming: $incomingChanges")
+    logger.info(s"sameAs changes incoming: $incomingChanges")
   }
 
   private def submitUpdate(update: String, connection: BigdataSailRepositoryConnection): Int = {
@@ -74,5 +75,7 @@ object Merge extends Command(description = "Perform clique merge on triples in B
 
   private def getQuery(filename: String): String =
     new BufferedReader(new InputStreamReader(this.getClass.getResourceAsStream(filename))).lines.collect(Collectors.joining("\n"))
+
+  private val logger = LoggerFactory.getLogger(Merge.getClass)
 
 }
