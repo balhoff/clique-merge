@@ -1,6 +1,5 @@
 #!/bin/bash
 
-curl -O http://tenet.dl.sourceforge.net/project/bigdata/bigdata/2.1.1/blazegraph.jar
-
 # Make sure all the RDF files are in a folder called `data`
-java -XX:+UseG1GC -Xmx12G -cp blazegraph.jar com.bigdata.rdf.store.DataLoader blazegraph.properties data
+export JAVA_OPTS="-XX:+UseG1GC -Xmx12G"
+./clique-merge/bin/clique-merge --properties=blazegraph.properties load data
