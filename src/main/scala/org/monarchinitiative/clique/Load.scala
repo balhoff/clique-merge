@@ -16,9 +16,9 @@ object Load extends Command(description = "Load RDF files into Blazegraph.") wit
   var data = arg[File](description = "Folder containing RDF files to be loaded.")
 
   override def run(): Unit = {
-    FileUtils.listFiles(data, null, true).asScala.filterNot(_.getName == "catalog-v001.xml")
+    FileUtils.listFiles(data, null, true).asScala.filterNot(_.getName == "catalog-v001.xml").filter(_.isFile)
       .foreach { datafile =>
-        val iri = findOntologyIRI(data.getAbsolutePath).getOrElse(datafile.getName)
+        val iri = findOntologyIRI(datafile.getAbsolutePath).getOrElse(s"file:${datafile.getName}")
         DataLoader.main(Array("-defaultGraph", iri, properties.getAbsolutePath, datafile.getAbsolutePath))
       }
   }
