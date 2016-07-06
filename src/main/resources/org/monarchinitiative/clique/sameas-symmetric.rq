@@ -1,7 +1,9 @@
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
-INSERT {  
-?o owl:sameAs ?s .
+INSERT {
+    GRAPH <http://monarchinitiative.org/cliquemerge> {
+        ?o owl:sameAs ?s .
+    }
 } 
 WHERE { 
 ?s owl:sameAs ?o .

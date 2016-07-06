@@ -12,6 +12,10 @@ import org.openrdf.query.QueryLanguage
 import java.io.BufferedOutputStream
 import org.openrdf.rio.turtle.TurtleWriter
 
+/**
+ * Dump database to a single RDF file.
+ * This needs update to handle named graphs!
+ */
 object Dump extends Command(description = "Dump Blazegraph database to a Turtle RDF file.") with Common {
 
   var file = arg[File](description = "File name for RDF output.")

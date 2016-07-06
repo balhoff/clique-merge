@@ -4,7 +4,9 @@ DELETE {
 ?s owl:equivalentClass ?o .
 }
 INSERT {
-?s owl:sameAs ?o .
+    GRAPH <http://monarchinitiative.org/cliquemerge> {
+        ?s owl:sameAs ?o .
+    }
 }
 WHERE {
 ?s owl:equivalentClass ?o .
