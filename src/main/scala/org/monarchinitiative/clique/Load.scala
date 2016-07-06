@@ -10,6 +10,7 @@ import org.backuity.clist._
 import com.bigdata.rdf.store.DataLoader
 import org.apache.commons.io.FileUtils
 import scala.collection.JavaConverters._
+import org.slf4j.LoggerFactory
 
 object Load extends Command(description = "Load RDF files into Blazegraph.") with Common {
 
@@ -51,9 +52,18 @@ object Load extends Command(description = "Load RDF files into Blazegraph.") wit
       // in an exception. Otherwise, return None.
       None
     } catch {
-      case FoundTripleException(triple) => Option(triple.getSubject.getURI)
+      case FoundTripleException(triple) => {
+        if (triple.getSubject.isBlank) {
+          logger.warn(s"Blank node subject for ontology triple: ${triple}")
+          None
+        } else {
+          Option(triple.getSubject.getURI)
+        }
+      }
     }
 
   }
+
+  private val logger = LoggerFactory.getLogger(Load.getClass)
 
 }
